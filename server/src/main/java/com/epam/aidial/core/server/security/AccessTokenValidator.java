@@ -66,13 +66,6 @@ public class AccessTokenValidator {
         }
     }
 
-    public Future<ExtractedClaims> extractClaims(String authHeader) {
-        return extractClaimsInternal(authHeader).map(claims -> {
-            log.info("User claims: {}", claims);
-            return claims;
-        });
-    }
-
     private Future<ExtractedClaims> extractClaimsInternal(String authHeader) {
         String accessToken = null;
         try {
@@ -94,6 +87,13 @@ public class AccessTokenValidator {
             log.error("Error occurred on processing access token from authorization header", e);
             return Future.failedFuture(e);
         }
+    }
+
+    public Future<ExtractedClaims> extractClaims(String authHeader) {
+        return extractClaimsInternal(authHeader).map(claims -> {
+            log.info("User claims: {}", claims);
+            return claims;
+        });
     }
 
     private Future<ExtractedClaims> extractClaims(String accessToken, IdentityProvider provider) {
