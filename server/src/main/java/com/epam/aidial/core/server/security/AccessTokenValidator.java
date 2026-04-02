@@ -13,6 +13,7 @@ import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.Nullable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -23,7 +24,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
-import javax.annotation.Nullable;
 
 @Slf4j
 public class AccessTokenValidator {
@@ -67,6 +67,13 @@ public class AccessTokenValidator {
     }
 
     public Future<ExtractedClaims> extractClaims(String authHeader) {
+        return extractClaimsInternal(authHeader).map(claims -> {
+            log.info("User claims: {}", claims);
+            return claims;
+        });
+    }
+
+    private Future<ExtractedClaims> extractClaimsInternal(String authHeader) {
         String accessToken = null;
         try {
             if (authHeader == null) {

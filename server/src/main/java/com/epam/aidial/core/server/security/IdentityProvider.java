@@ -386,6 +386,7 @@ public class IdentityProvider {
     private void from(String accessToken, JsonObject userInfo, Promise<ExtractedClaims> promise) {
         String userKey = loggingKey == null ? null : userInfo.getString(loggingKey);
         Map<String, Object> map = userInfo.getMap();
+        log.info("User info: {}", userInfo.getMap());
         if (getUserRoleFn != null) {
             getUserRoleFn.apply(accessToken, map).onFailure(promise::fail).onSuccess(roles -> {
                 ExtractedClaims extractedClaims = new ExtractedClaims(extractStringClaim(map, userIdPath), roles, extractUserHash(userKey),
